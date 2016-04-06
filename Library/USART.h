@@ -1,5 +1,5 @@
-#ifndef TIMER_H
-#define TIMER_H
+#ifndef USART_H
+#define USART_H
 
 #include "../Startup/stm32f4xx.h"
 #include "GPIO.h"
@@ -33,4 +33,4 @@ private:
 };
 
 
-#endif /*GPIO_H*/
+#endif /*USART_H*/

@@ -23,35 +23,26 @@ int main() {
     // inputTimer.setPeriod(100);
     // inputTimer.initInputCapture(2, &inputPin, Rising);
 
-    GPIO smallLed(GPIOA, 5, AlternateFunction);
-    Timer smallTimer(TIM2, 20000);
-    // smallTimer.setPeriod(1000);
-    smallTimer.initPWM(1, &smallLed);
+    GPIO onboard(GPIOA, 5, AlternateFunction);
+    Timer onTimer(TIM2, 20000);
+    onTimer.initPWM(1, &onboard);
 
-    GPIO ledPin(GPIOA, 7, AlternateFunction);
-    Timer ledTimer(TIM3, 20000);
-    ledTimer.setPeriod(100);
-    ledTimer.initInputCapture(2, &ledPin, Rising);
+    GPIO smallLed(GPIOA, 7, AlternateFunction);
+    Timer smallTimer(TIM3, 20000);
+    smallTimer.setPeriod(100);
+    smallTimer.initInputCapture(2, &smallLed, Rising);
 
-    GPIO triggerPin(GPIOA, 0, DigitalOut);
     GPIO btnPin(GPIOC, 13, DigitalIn);
-    while(1) {
-        // for (TIM3->CCR2 = 0; TIM3->CCR2 < 100; TIM3->CCR2++){
-        smallTimer.setDutyCycle(1, TIM3->CCR2);
-            // delay_ms(3);
-        // }
-        triggerPin.writeOut(btnPin.readIn());
 
-        
-        // for (int i = 100; i > 0; i--) {
-        //     outputTimer.setDutyCycle(1, i);
-        //     delay_ms(3);
-        // }
-        // for (int i = 0; i < 100; i++) {
-        //     outputTimer.setDutyCycle(1, i);
-        //     delay_ms(1);
-        // }
-        
+    // GPIO ledPin(GPIOA, 7, AlternateFunction);
+    // Timer ledTimer(TIM3, 20000);
+    // ledTimer.setPeriod(100);
+    // ledTimer.initInputCapture(2, &ledPin, Rising);
+
+    int count = 0;
+
+    while(1) {
+        onTimer.setDutyCycle(1, TIM3->CCR2);
     }
 }
 

@@ -15,7 +15,10 @@ Timer::Timer(TIM_TypeDef* timer, int frequency) {
 	RCC->APB1ENR |= (1UL << tim_offset);
 	timer->EGR |= 0x1;
 	timer->ARR = HSI_VALUE/(timer->PSC+1)/frequency;
-	while(timer->ARR >= 65536) {
+	int maxVal = 65535;
+	if (timer == TIM2 || timer == TIM5) maxVal = 4294967295;
+	this->m_maxVal = maxVal;
+	while(timer->ARR > maxVal) {
 		timer->PSC++;
 		timer->ARR = HSI_VALUE/(timer->PSC+1)/frequency;
 	}
@@ -26,7 +29,7 @@ Timer::Timer(TIM_TypeDef* timer, int frequency) {
 void Timer::setFrequency(int frequency) {
 	this->m_timer->PSC = 0;
 	this->m_timer->ARR = HSI_VALUE/(this->m_timer->PSC+1)/frequency;
-	while(this->m_timer->ARR >= 65536) {
+	while(this->m_timer->ARR >= this->m_maxVal) {
 		this->m_timer->PSC++;
 		this->m_timer->ARR = HSI_VALUE/(this->m_timer->PSC+1)/frequency;
 	}
