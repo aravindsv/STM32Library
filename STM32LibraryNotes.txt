@@ -1,0 +1,24 @@
+To use timer:
+1. Set bit 0 of EGR to reinitialize the counter (including prescaler)
+2. set ARR. ARR contains period, frequency will be HSI_VALUE/PSC/ARR
+3. If ARR >= 65536, increase prescaler to achieve the same frequency with lower ARR
+4. Enable APB1 Clock
+4. Enable the counter by setting bit 0 of CR1
+
+To Use timer in PWM Mode:
+1. Set bit 7 of CR1 to enable Auto Reload of ARR value
+2. Enable output channel in CCER
+3. Set output mode in CCMR1/2
+4. Set alternate function mode in AFR depending on which timer is being used
+5. Duty cycle will be value of CCR register
+
+To use timer in encoder mode:
+Relevant registers:
+- CCRx is used to latch the value of the counter after transition is detected
+- SR will have flag set when a capture occurs, CCxIF bit. This will be cleared when data is read from CCRx
+Procedure:
+1. Select active input. Write CC1S bits in CCMRx to 01 (or just not 00)
+2. Program filter duration in ICxF bits on CCMRx
+3. Select active edge with CC1P and CC1NP in CCER
+4. Input Prescaler if needed, if not needed then write IC1PS bits in CCMRx to 00
+5. Enable capture from counter into capture register by setting CC1E bit in CCER

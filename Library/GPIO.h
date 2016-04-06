@@ -8,7 +8,8 @@ enum PinMode {
         DigitalOut,
         DigitalIn,
         AnalogIn,
-        AlternateFunction
+        AlternateFunction,
+        PWM
 };
 
 class GPIO {
@@ -19,12 +20,12 @@ public:
     int writeOut(int state);
     int readIn();
 
-    
-
-private:
     GPIO_TypeDef*   m_port;
     int             m_pinNum;
     PinMode         m_mode;
+    
+
+private:
     int             m_setMask   = (1<<m_pinNum);
 };
 

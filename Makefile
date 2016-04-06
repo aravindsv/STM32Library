@@ -63,7 +63,7 @@ MCFLAGS=-mcpu=cortex-m4 -mthumb -mlittle-endian \
 DEFS=-DSTM32F4XX
 CFLAGS=-c $(MCFLAGS) $(DEFS) $(INCLUDES)
 CXXFLAGS=-c $(MCFLAGS) $(DEFS) $(INCLUDES) -std=c++11
-LDFLAGS =-T $(LDSCRIPT) $(MCFLAGS) --specs=nosys.specs $(INCLUDES_LIBS) $(LINK_LIBS)
+LDFLAGS =-T $(LDSCRIPT) $(MCFLAGS) --specs=nosys.specs $(INCLUDES_LIBS) $(LINK_LIBS) -g
 
 #############################
 
@@ -83,21 +83,21 @@ $(BINDIR)/$(BINBIN): $(BINDIR)/$(BINELF)
 	@echo "Objcopy from ELF to BIN complete!\n"
 
 $(BINDIR)/$(BINELF): $(OBJECTS)
-	$(CXX) $(OBJECTS) $(LDFLAGS) -o $@
+	$(CXX) -g $(OBJECTS) $(LDFLAGS) -o $@
 	@echo "Linking complete!\n"
 	$(SIZE) $(BINDIR)/$(BINELF)
 
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) $< -o $@
+	$(CXX) -g $(CXXFLAGS) $< -o $@
 
 %.o: %.c
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) -g $(CFLAGS) $< -o $@
 
 %.o: %.s
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) -g $(CFLAGS) $< -o $@
 
 %.o: %.S
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) -g $(CFLAGS) $< -o $@
 
 clean:
 	rm -f $(OBJECTS) $(BINDIR)/$(BINELF) $(BINDIR)/$(BINHEX) $(BINDIR)/$(BINBIN) $(BINDIR)/output.map
