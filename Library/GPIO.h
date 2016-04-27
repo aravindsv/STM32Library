@@ -8,8 +8,7 @@ enum PinMode {
         DigitalOut,
         DigitalIn,
         AnalogIn,
-        AlternateFunction,
-        PWM
+        AlternateFunction
 };
 
 class GPIO {

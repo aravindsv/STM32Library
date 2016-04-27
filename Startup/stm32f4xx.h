@@ -6372,7 +6372,7 @@ typedef struct
 #define  USART_SR_ORE                        ((uint16_t)0x0008)            /*!<OverRun Error */
 #define  USART_SR_IDLE                       ((uint16_t)0x0010)            /*!<IDLE line detected */
 #define  USART_SR_RXNE                       ((uint16_t)0x0020)            /*!<Read Data Register Not Empty */
-#define  USART_SR_TC                         ((uint16_t)0x0040)            /*!<Transmission Complete */
+#define  USART_SR_TC                         ((uint16_t)0x0040) //0b0000 0000 0100 0000           /*!<Transmission Complete */
 #define  USART_SR_TXE                        ((uint16_t)0x0080)            /*!<Transmit Data Register Empty */
 #define  USART_SR_LBD                        ((uint16_t)0x0100)            /*!<LIN Break Detection Flag */
 #define  USART_SR_CTS                        ((uint16_t)0x0200)            /*!<CTS Flag */

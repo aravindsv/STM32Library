@@ -51,7 +51,8 @@ void Timer::initInputCapture(int channel, GPIO *pin, EdgeMode eMode) {
 						   this->m_timer == TIM9  ? 0b0011 :
 						   this->m_timer == TIM10 ? 0b0011 :
 					   /*this->m_timer == TIM11 ? */0b0011;
-	pin->m_port->AFR[pin->m_pinNum > 7] |= ((0b0010) << (4*(pin->m_pinNum - 8*(pin->m_pinNum > 7)))); //Set alternate function mode for GPIO
+	pin->m_port->AFR[pin->m_pinNum > 7] &= ~((0b1111) << (4*(pin->m_pinNum - 8*(pin->m_pinNum > 7))));	
+	pin->m_port->AFR[pin->m_pinNum > 7] |= ((afMode) << (4*(pin->m_pinNum - 8*(pin->m_pinNum > 7)))); //Set alternate function mode for GPIO
 	switch(channel) { //Set filter, prescaler, and active input
 		case 1:
 			this->m_timer->CCMR1 |= 0x0071; //Filter seems to need to be pretty extreme. can set between 7 or 0
@@ -109,7 +110,7 @@ void Timer::initPWM(int channel, GPIO *pin) {
 						   this->m_timer == TIM9  ? 0b0011 :
 						   this->m_timer == TIM10 ? 0b0011 :
 					   /*this->m_timer == TIM11 ? */0b0011;
-
+	pin->m_port->AFR[pin->m_pinNum > 7] &= ~((0b1111) << (4*(pin->m_pinNum - 8*(pin->m_pinNum > 7))));				   
 	pin->m_port->AFR[pin->m_pinNum > 7] |= ((afMode) << (4*(pin->m_pinNum - 8*(pin->m_pinNum > 7))));
 	this->m_timer->EGR |= 1;
 }

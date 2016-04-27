@@ -22,3 +22,18 @@ Procedure:
 3. Select active edge with CC1P and CC1NP in CCER
 4. Input Prescaler if needed, if not needed then write IC1PS bits in CCMRx to 00
 5. Enable capture from counter into capture register by setting CC1E bit in CCER
+
+ADC:
+1. Enable clock
+2. Set ADON bit in CR2
+Conversion doesn’t start until SWSTART or JWSTART is set
+Single Conversion Mode:
+1. CONT bit to 0
+2.
+Regular Channel: set SWSTART bit in CR2
+Injected Channel: set JSWSTART bit in CR2
+3. 
+Regular Channel: EOC flag will be set, read from DR register
+Injected Channel: JEOC flag will be set, read from JDR1 register
+Continuous Conversion Mode:
+1. CONT bit to 1 (set SWSTRT bit in CR2 for regular channels)
