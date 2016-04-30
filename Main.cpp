@@ -4,23 +4,69 @@
 #define DELAY_C 50
 
 /* Interrupt Test Code */
-int main() {
-    GPIO btn(GPIOC, 13, DigitalIn);
-    RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
-    SYSCFG->EXTICR[3] |= SYSCFG_EXTICR1_EXTI0_PC;
-    EXTI->IMR |= 1 << 13;
-}
+
+
+// void EXTI4_IRQHandler(void)
+// {
+//     EXTI->PR |= (1 << 13);            // ack int
+//     // ISR code
+//     led.writeOut(0);
+//     // flag = !flag;
+// }
+// int count = 0;
+
+
+
+// int main() {
+    
+//     GPIO tx(GPIOA, 2, AlternateFunction);
+//     GPIO rx(GPIOA, 3, AlternateFunction);
+
+//     GPIO led(GPIOB, 6, DigitalOut);
+    
+
+//     USART serial(USART2, 9600);
+//     serial.setPins(&tx, &rx);
+//     serial.sendString("Starting program!\n");
+
+
+//     GPIO btn(GPIOC, 13, DigitalIn);
+
+//     // RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
+//     // SYSCFG->EXTICR[3] |= SYSCFG_EXTICR1_EXTI0_PC;
+//     // EXTI->IMR |= 1 << 13;
+//     // EXTI->RTSR |= (1 << 13);
+//     // // EXTI->FTSR |= (1 << 13);
+
+//     // uint32_t prioritygroup = NVIC_GetPriorityGrouping();
+//     // // Highest user int priority (0), 1 sub-pri
+//     // uint32_t priority = NVIC_EncodePriority(prioritygroup, 0, 1 );    
+//     // NVIC_SetPriority(EXTI4_IRQn, priority);
+//     // NVIC_EnableIRQ(EXTI4_IRQn);
+//     while(1){
+//         char s[50];
+//         sprintf(s, "%d\n", count);
+//         serial.sendString(s);
+//         // led.writeOut(flag);
+//         delay_ms(1000);
+//         led.writeOut(!led.readIn());
+//         count++;
+//     }
+// }
 
 /* Micromouse Test Code */
-/*int main() {
-    GPIO led(GPIOA, 5, DigitalOut);
+int main() {
+    GPIO led(GPIOA, 15, DigitalOut);
+    GPIO oPin(GPIOA, 3, DigitalOut);
     while(1) {
         led.writeOut(1);
-        delay_ms(1000);
+        oPin.writeOut(1);
+        delay_ms(500);
         led.writeOut(0);
+        oPin.writeOut(0);
         delay_ms(500);
     }
-}*/
+}
 
 
 /* Analog In Example Code*/
