@@ -4,7 +4,6 @@ USART::USART(USART_TypeDef *usart, int baudrate) {
 	this->m_usart = usart;
 
 	//Enable APB Clock
-	int cenbit = 0;
 	if (usart == USART2 || usart == USART3 || usart == UART4 || usart == UART5) {
 		RCC->APB1ENR |= usart == USART2 ? RCC_APB1ENR_USART2EN :
 				        usart == USART3 ? RCC_APB1ENR_USART3EN :

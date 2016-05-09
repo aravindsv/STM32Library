@@ -10,7 +10,7 @@
 // {
 //     EXTI->PR |= (1 << 13);            // ack int
 //     // ISR code
-//     led.writeOut(0);
+//     // led.writeOut(0);
 //     // flag = !flag;
 // }
 // int count = 0;
@@ -55,19 +55,117 @@
 // }
 
 /* Micromouse Test Code */
+// int main() {
+//     GPIO led(GPIOB, 12, DigitalOut);
+//     // GPIO oPin(GPIOB, 3, DigitalOut);
+//     while(1) {
+//         led.writeOut(1);
+//         // oPin.writeOut(1);
+//         delay_ms(500);
+//         led.writeOut(0);
+//         // oPin.writeOut(0);
+//         delay_ms(1000);
+//     }
+// }
+
 int main() {
-    GPIO led(GPIOA, 15, DigitalOut);
-    GPIO oPin(GPIOA, 3, DigitalOut);
+    GPIO lmotorA(GPIOB, 6, AlternateFunction);
+    Timer motors(TIM4, 20000);
+    motors.initPWM(1, &lmotorA);
+
+    GPIO lmotorB(GPIOB, 7, AlternateFunction);
+    motors.initPWM(2, &lmotorB);
+
+    GPIO rmotorA(GPIOB, 8, AlternateFunction);
+    motors.initPWM(3, &rmotorA);
+
+    GPIO rmotorB(GPIOB, 9, AlternateFunction);
+    motors.initPWM(4, &rmotorB);
+
+    GPIO led(GPIOC, 11, DigitalOut);
+    led.writeOut(1);
+    delay_ms(500);
+    led.writeOut(0);
+    delay_ms(500);
+    led.writeOut(1);
+    delay_ms(500);
+    led.writeOut(0);
+    delay_ms(500);
+    // GPIO oPin(GPIOB, 3, DigitalOut);
     while(1) {
-        led.writeOut(1);
-        oPin.writeOut(1);
-        delay_ms(500);
-        led.writeOut(0);
-        oPin.writeOut(0);
-        delay_ms(500);
+        for (int i = 0; i < 100; i++) {
+            motors.setDutyCycle(1, i);
+            motors.setDutyCycle(4, i);
+            motors.setDutyCycle(2, 0);
+            motors.setDutyCycle(3, 0);
+            delay_ms(10);
+        }
+        delay_ms(1000);
+        for (int i = 100; i > 0; i--) {
+            motors.setDutyCycle(1, i);
+            motors.setDutyCycle(4, i);
+            motors.setDutyCycle(2, 0);
+            motors.setDutyCycle(3, 0);
+            delay_ms(10);
+        }
+        delay_ms(1000);
     }
 }
 
+
+/*Micromoose Code*/
+// class Motor {
+// public:
+//     Motor(GPIO* gA, GPIO* gB, Timer* tA, Timer* tB, int channel1, int channel2) {
+//         this->gA = gA;
+//         this->gB = gB;
+//         this->tA = tA;
+//         this->tB = tB;
+//         this->cA = channel1;
+//         this->cB = channel2;
+//     }
+//     // Motor(GPIO_TypeDef* port1, int num1, GPIO_TypeDef* port2, int num2, TIM_TypeDef* timer1, int channel1, TIM_TypeDef* timer2, int channel2) {
+//     //     this->gA = GPIO gA(port1, num1, AlternateFunction);
+//     //     this->gB = GPIO gB(port2, num2, AlternateFunction);
+//     //     this->tA = Timer tA(timer1, 16000);
+//     //     this->tB = Timer tB(timer2, 16000);
+//     //     this->cA = channel1;
+//     //     this->cB = channel2;
+//     // }
+//     void setSpeed(int speed) {
+//         if (speed > 0) {
+//             this->tA->setDutyCycle(this->cA, speed);
+//             this->tB->setDutyCycle(this->cB, 0);
+//         }
+//         else if (speed < 0) {
+//             speed = -speed;
+//             this->tA->setDutyCycle(this->cA, 0);
+//             this->tB->setDutyCycle(this->cB, speed);
+//         }
+//         else {
+//             this->tA->setDutyCycle(this->cA, 0);
+//             this->tB->setDutyCycle(this->cB, 0);
+//         }
+//     }
+
+// private:
+//     GPIO* gA;
+//     GPIO* gB;
+//     Timer* tA;
+//     Timer* tB;
+//     int cA;
+//     int cB;
+// };
+
+// int main() {
+//     GPIO lIn1(GPIOB, 6, AlternateFunction);
+//     GPIO lIn2(GPIOB, 7, AlternateFunction);
+//     Timer lTim(TIM4, 16000);
+//     Motor lMotor(&lIn1, &lIn2, &lTim, &lTim, 1, 2);
+//     while(1) {
+//         lMotor.setSpeed(25);
+//     }
+// }
 
 /* Analog In Example Code*/
 /*
