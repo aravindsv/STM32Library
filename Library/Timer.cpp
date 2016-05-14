@@ -35,7 +35,7 @@ void Timer::setFrequency(int frequency) {
 	}
 }
 
-void Timer::setPeriod(int period) {
+void Timer::setPeriod(unsigned int period) {
 	this->m_timer->PSC = 0;
 	this->m_timer->ARR = period;
 	this->m_frequency = HSI_VALUE/(this->m_timer->PSC+1)/period;
@@ -74,6 +74,12 @@ void Timer::initInputCapture(int channel, GPIO *pin, EdgeMode eMode) {
 					     /*Should never get this*/0;
 	unsigned char ccerVal = 1 | (edge << 1);
 	this->m_timer->CCER |= (ccerVal << (4*(channel-1)));
+	switch (channel) {
+		case 1: this->m_timer->CCR1 = 0;
+		case 2: this->m_timer->CCR2 = 0;
+		case 3: this->m_timer->CCR3 = 0;
+		case 4: this->m_timer->CCR4 = 0;
+	}
 }
 
 int Timer::inputCaptureVal(int channel) {
@@ -112,6 +118,7 @@ void Timer::initPWM(int channel, GPIO *pin) {
 					   /*this->m_timer == TIM11 ? */0b0011;
 	pin->m_port->AFR[pin->m_pinNum > 7] &= ~((0b1111) << (4*(pin->m_pinNum - 8*(pin->m_pinNum > 7))));				   
 	pin->m_port->AFR[pin->m_pinNum > 7] |= ((afMode) << (4*(pin->m_pinNum - 8*(pin->m_pinNum > 7))));
+
 	this->m_timer->EGR |= 1;
 }
 
@@ -132,4 +139,68 @@ void Timer::setDutyCycle(int channel, int dc) {
 			this->m_timer->CCR4 = val;
 			break;
 	}
+}
+
+void Timer::initEncoderMode(int channel1, int channel2, GPIO *pin1, GPIO *pin2) {
+	unsigned char afMode = this->m_timer == TIM1  ? 0b0001 : //set Alternate Function mode for GPIO
+						   this->m_timer == TIM2  ? 0b0001 :
+						   this->m_timer == TIM3  ? 0b0010 :
+						   this->m_timer == TIM4  ? 0b0010 :
+						   this->m_timer == TIM5  ? 0b0010 :
+						   this->m_timer == TIM9  ? 0b0011 :
+						   this->m_timer == TIM10 ? 0b0011 :
+					   /*this->m_timer == TIM11 ? */0b0011;
+	pin1->m_port->AFR[pin1->m_pinNum > 7] &= ~((0b1111) << (4*(pin1->m_pinNum - 8*(pin1->m_pinNum > 7))));				   
+	pin1->m_port->AFR[pin1->m_pinNum > 7] |= ((afMode) << (4*(pin1->m_pinNum - 8*(pin1->m_pinNum > 7))));
+	pin2->m_port->AFR[pin2->m_pinNum > 7] &= ~((0b1111) << (4*(pin2->m_pinNum - 8*(pin2->m_pinNum > 7))));				   
+	pin2->m_port->AFR[pin2->m_pinNum > 7] |= ((afMode) << (4*(pin2->m_pinNum - 8*(pin2->m_pinNum > 7))));
+
+	this->m_timer->CR1 &= ~0x1;
+	this->setPeriod(4294967295);
+	switch(channel1) { //
+		case 1:	     //       0b0000000100000000
+			this->m_timer->CCMR1 |= 0x0071; 
+			break;
+		case 2:
+			this->m_timer->CCMR1 |= 0x7100;
+			break;
+		case 3:
+			this->m_timer->CCMR2 |= 0x0071;
+			break;
+		case 4:
+			this->m_timer->CCMR2 |= 0x7100;
+			break;
+	}
+	switch(channel2) { //
+		case 1:	     //       0b0000000100000000
+			this->m_timer->CCMR1 |= 0x0071; 
+			break;
+		case 2:
+			this->m_timer->CCMR1 |= 0x7100;
+			break;
+		case 3:
+			this->m_timer->CCMR2 |= 0x0071;
+			break;
+		case 4:
+			this->m_timer->CCMR2 |= 0x7100;
+			break;
+	}
+	//Set CCER Register
+	unsigned char ccerVal = 1;
+	this->m_timer->CCER |= (ccerVal << (4*(channel1-1)));
+	this->m_timer->CCER |= (ccerVal << (4*(channel2-1)));
+
+	this->m_timer->SMCR |= 3; //Encoder mode where both edges on both inputs are counted
+	this->m_timer->CR1 |= 0x1;
+}
+
+void Timer::reverseEncoderPolarity(int channel1, int channel2) {
+	//Set CCER Register
+	unsigned char ccerVal = 3;
+	// this->m_timer->CCER |= (ccerVal << (4*(channel1-1)));
+	this->m_timer->CCER |= (ccerVal << (4*(channel2-1)));
+}
+
+volatile int Timer::readEncoder() {
+	return this->m_timer->CNT;
 }
