@@ -103,7 +103,7 @@ LoopFillZerobss:
 
 /* Call the clock system intitialization function.*/
 // bl  SystemInit
-/* Call the application's entry point.*/
+/* Call the application`s entry point.*/
   bl  main
   bx  lr
 .size  Reset_Handler, .-Reset_Handler
@@ -117,8 +117,8 @@ LoopFillZerobss:
 */
     .section  .text.Default_Handler,"ax",%progbits
 Default_Handler:
-Infinite_Loop:
-  b  Infinite_Loop
+# Infinite_Loop:
+#   b  Infinite_Loop
   .size  Default_Handler, .-Default_Handler
 /******************************************************************************
 *
