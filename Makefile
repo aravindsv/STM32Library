@@ -21,7 +21,7 @@ STARTUPDIR=Startup
 
 
 # Linker Script
-LDSCRIPT=~/Development/stm32/LinkerScripts/STM32F411XE.ld
+LDSCRIPT=Linkers/STM32F411XE.ld
 
 
 #############################
