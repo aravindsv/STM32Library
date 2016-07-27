@@ -1,0 +1,56 @@
+# GNU ARM Embedded Toolchain
+CC=arm-none-eabi-gcc
+CXX=arm-none-eabi-g++
+LD=arm-none-eabi-ld
+AR=arm-none-eabi-ar
+AS=arm-none-eabi-as
+CP=arm-none-eabi-objcopy
+OD=arm-none-eabi-objdump
+NM=arm-none-eabi-nm
+SIZE=arm-none-eabi-size
+A2L=arm-none-eabi-addr2line
+
+#############################
+
+# Directory Structure
+MODDIR=$(TOPDIR)/STM32Library
+BINDIR=$(TOPDIR)/bin
+INCDIR=$(MODDIR)/Inc
+SRCDIR=.
+LIBDIR=$(MODDIR)/Library
+STARTUPDIR=$(MODDIR)/Startup
+
+
+# Linker Script
+LDSCRIPT=$(MODDIR)/Linkers/STM32F411XE.ld
+
+
+#############################
+
+# Find source files
+ASOURCES=$(shell find -L $(STARTUPDIR) -name '*.s')
+ASOURCESPP=$(shell find -L $(STARTUPDIR) -name '*.S')
+CSOURCES=$(shell find -L $(SRCDIR) -name '*.c')
+# CSOURCES+=$(shell find -L $(STARTUPDIR) -name '*.c')
+CXXSOURCES=$(shell find -L $(SRCDIR) -name '*.cpp')
+# CXXSOURCES+=$(shell find -L $(LIBDIR) -name '*.cpp')
+
+# Find header files
+INC+=$(INCDIR)
+INC+=$(LIBDIR)
+INC+=$(STARTUPDIR)
+INCLUDES=$(INC:%=-I%)
+
+# Find libraries
+INCLUDES_LIBS=
+LINK_LIBS=
+
+# Create Object List
+OBJECTS=$(ASOURCES:%.s=%.o)
+OBJECTS+=$(ASOURCESPP:%.S=%.o)
+OBJECTS+=$(CSOURCES:%.c=%.o)
+OBJECTS+=$(CXXSOURCES:%.cpp=%.o)
+# Define output files ELF & IHEX
+BINELF=$(OUTPUT).elf
+BINHEX=$(OUTPUT).hex
+BINBIN=$(OUTPUT).bin
