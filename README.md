@@ -18,3 +18,25 @@ MODULEDIR=$(TOPDIR)/STM32Library
 include $(MODULEDIR)/Makefile_defines
 include $(MODULEDIR)/Makefile_std_rules
 ```
+
+## Usage and Syntax
+This version of the library uses a template metaprogramming paradigm to have separate classes for each peripheral
+instantiated by the compiler. 
+The advantage to this is zero RAM usage for objects (since no objects are ever actually instantiated).
+For more info on how this works, refer to http://www.webalice.it/fede.tft/stm32/stm32_gpio_and_template_metaprogramming.html
+
+Following are examples of each peripheral type and how to use them.
+
+### GPIO
+```
+// To create a GPIO 'object'
+typedef Gpio<GPIOA, 0> led; //Template parameters are the GPIO port, and the number on that port
+
+// To set the GPIO object's mode
+led::mode(GPIO_OUTPUT); //Full list of possible mode constants are in Library/GPIO.h
+
+// To set GPIO high or low
+led::set(1);
+led::set(0);
+
+```
