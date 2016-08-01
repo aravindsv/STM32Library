@@ -4,39 +4,6 @@
 #include "../Startup/stm32f4xx.h"
 #include "GPIO.h"
 
-// enum EdgeMode {
-//         Rising,
-//         Falling,
-//         RisingFalling,
-//         None
-// };
-
-// class Timer {
-// public:
-// 	Timer(TIM_TypeDef* timer, int frequency);
-// 	void setFrequency(int frequency);
-// 	void setPeriod(unsigned int period);
-
-// 	//For PWM Mode
-// 	void initPWM(int channel, GPIO *pin);
-// 	void setDutyCycle(int channel, int duty);
-	
-
-// 	//For Input Capture Mode
-// 	void initInputCapture(int channel, GPIO *pin, EdgeMode emode);
-// 	int inputCaptureVal(int channel);
-
-// 	//For Encoder Mode
-// 	void initEncoderMode(int channel1, int channel2, GPIO *pin1, GPIO *pin2);
-// 	volatile int readEncoder();
-// 	void reverseEncoderPolarity(int channel1, int channel2);
-
-// private:
-// 	TIM_TypeDef* m_timer;
-// 	int m_frequency;
-// 	int m_maxVal;
-// };
-
 void configureTimerRCC(TIM_TypeDef* timer)
 {
 	int tim_offset = timer == TIM2  ? 0 :
@@ -64,12 +31,11 @@ public:
 	 */
 	static void setFrequency(unsigned int f)
 	{
-		TIM_TypeDef* timer = reinterpret_cast<TIM_TypeDef*>(T)
+		TIM_TypeDef* timer = reinterpret_cast<TIM_TypeDef*>(T);
 		configureTimerRCC(timer);
 		timer->ARR = HSI_VALUE/(timer->PSC+1)/f;
 		int maxVal = 65535;
 		if (timer == TIM2 || timer == TIM5) maxVal = 4294967295;
-		this->m_maxVal = maxVal;
 		timer->PSC = 0;
 		while(timer->ARR > maxVal) 
 		{
@@ -85,7 +51,7 @@ public:
 	 */
 	static void setPeriod(unsigned int p)
 	{
-		TIM_TypeDef* timer = reinterpret_cast<TIM_TypeDef*>(T)
+		TIM_TypeDef* timer = reinterpret_cast<TIM_TypeDef*>(T);
 		configureTimerRCC(timer);
 		timer->ARR = p;
 		timer->CR1 |= 0x81; //ARPE and EN bits
@@ -93,7 +59,7 @@ public:
 
 	static void initPWM(unsigned int channel)
 	{
-		TIM_TypeDef* timer = reinterpret_cast<TIM_TypeDef*>(T)
+		TIM_TypeDef* timer = reinterpret_cast<TIM_TypeDef*>(T);
 		int enReg = 4*(channel - 1);
 		timer->CCER |= (1UL << enReg); //Enable output channel
 		switch(channel) //Set output mode and preload enable for output channels
@@ -118,7 +84,7 @@ public:
 
 	static void setDutyCycle(unsigned int channel, unsigned int duty)
 	{
-		TIM_TypeDef* timer = reinterpret_cast<TIM_TypeDef*>(T)
+		TIM_TypeDef* timer = reinterpret_cast<TIM_TypeDef*>(T);
 		if (duty > 100) return;
 		uint32_t val = timer->ARR*duty/100;
 		switch (channel) 
@@ -140,7 +106,7 @@ public:
 
 	
 
-}
+};
 
 
 #endif /*TIMER_H*/
