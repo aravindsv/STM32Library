@@ -183,15 +183,15 @@ public:
      */
     static void mode(unsigned int m)
     {
-        int port_offset = P == GPIOA ? 0 :
-                          P == GPIOB ? 1 :
-                          P == GPIOC ? 2 :
-                          P == GPIOD ? 3 :
-                          P == GPIOE ? 4 :
-                          P == GPIOF ? 5 :
-                          P == GPIOG ? 6 :
-                          P == GPIOH ? 7 :
-                          P == GPIOI ? 8 :
+        int port_offset = reinterpret_cast<GPIO_TypeDef*>(P) == GPIOA ? 0 :
+                          reinterpret_cast<GPIO_TypeDef*>(P) == GPIOB ? 1 :
+                          reinterpret_cast<GPIO_TypeDef*>(P) == GPIOC ? 2 :
+                          reinterpret_cast<GPIO_TypeDef*>(P) == GPIOD ? 3 :
+                          reinterpret_cast<GPIO_TypeDef*>(P) == GPIOE ? 4 :
+                          reinterpret_cast<GPIO_TypeDef*>(P) == GPIOF ? 5 :
+                          reinterpret_cast<GPIO_TypeDef*>(P) == GPIOG ? 6 :
+                          reinterpret_cast<GPIO_TypeDef*>(P) == GPIOH ? 7 :
+                          reinterpret_cast<GPIO_TypeDef*>(P) == GPIOI ? 8 :
                            /*Default*/ 9 ;
 
         RCC->AHB1ENR    |= ((1UL << port_offset) ); //Enable Clock for GPIO port
