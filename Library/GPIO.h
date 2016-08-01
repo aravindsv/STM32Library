@@ -183,6 +183,18 @@ public:
      */
     static void mode(unsigned int m)
     {
+        int port_offset = P == GPIOA ? 0 :
+                          P == GPIOB ? 1 :
+                          P == GPIOC ? 2 :
+                          P == GPIOD ? 3 :
+                          P == GPIOE ? 4 :
+                          P == GPIOF ? 5 :
+                          P == GPIOG ? 6 :
+                          P == GPIOH ? 7 :
+                          P == GPIOI ? 8 :
+                           /*Default*/ 9 ;
+
+        RCC->AHB1ENR    |= ((1UL << port_offset) ); //Enable Clock for GPIO port
         GpioMode<P, N>::mode(m);
     }
 
