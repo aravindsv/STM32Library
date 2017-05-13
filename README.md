@@ -40,3 +40,75 @@ led::set(1);
 led::set(0);
 
 ```
+
+### Timers
+#### PWM
+```
+// Create a timer 'object', set the frequency, and initialize it as PWM:
+typedef Timer<TIM2_BASE> pwmTimer;
+pwmTimer::setFrequency(20000);
+pwmTimer::initPWM(1);  //1 is the timer channel
+
+// A GPIO configured to ALTERNATE mode is also required
+typedef Gpio<GPIOA_BASE, 7> pwmLed;
+pwmLed::mode(GPIO_ALTERNATE | GPIO_AF_TIM2);
+
+//Set Duty cycle with setDutyCycle()
+pwmTimer::setDutyCycle(1, 50);
+
+```
+
+### Analog-Digital Converter
+```
+// First initialize GPIO to INPUT_ANALOG mode
+typedef Gpio<GPIOA_BASE, 6> analogIn;
+analogIn::mode(GPIO_INPUT_ANALOG);
+
+//Then create ADConverter 'object' and initialize
+typedef ADConverter<ADC1_BASE> adc;
+adc::initADC();
+
+//To read value, use readIn()
+analogValue = adc::readIn(5); //5 is the ADC channel
+
+```
+
+### USART
+```
+//First initialize two GPIOs
+typedef Gpio<GPIOA_BASE, 2> tx;
+typedef Gpio<GPIOA_BASE, 3> rx;
+
+// Set both GPIOs to AF_USARTX
+tx::mode(GPIO_ALTERNATE | GPIO_AF_USART2);
+rx::mode(GPIO_ALTERNATE | GPIO_AF_USART2);
+
+//Create a USART object and initialize it
+typedef USART<USART2_BASE> serial;
+serial::initUsart();
+
+//Send a string with sendString()
+serial::sendString("I have the high ground now\r\n");
+```
+
+### Interrupts
+#### External Interrupts
+```
+// First create an ExternalInterrupt 'object' and initialize with desired edge choice. All three edge choices are shown below
+typedef ExternalInterrupt<GPIOC_BASE, 13> extInt;
+extInt::initInterrupt(RISING);
+extInt::initInterrupt(FALLING);
+extInt::initInterrupt(CHANGE);
+
+// A function is required for the interrupt, and these functions have particular names. References/examples can be found under the class definition in Interrupt.h
+```
+
+#### SysTick
+```
+//First create the systick 'object' and initialize with the desired frequency in Hz
+typedef SystickInterrupt<1000> systick;
+systick::initSysTick();
+
+//A function with the following prototype is needed for the SysTick Handler:
+extern "C" void SysTick_Handler(void);
+```

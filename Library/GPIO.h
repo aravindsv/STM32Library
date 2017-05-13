@@ -145,7 +145,7 @@ struct GpioMode<P, N, false>
  *  green_led::high();
  *  \endcode
  */
-template<unsigned int P, unsigned char N>
+template<unsigned int P, unsigned char N, int M=-1>
 class Gpio
 {
 public:
@@ -224,15 +224,6 @@ public:
 
 private:
     Gpio(); // disallow
-};
-
-template<unsigned int P, unsigned char N, unsigned int M>
-class GPIO
-{
-    GPIO() {
-        GPIO<P, N>::mode(m);
-    }
-    
 };
 
 

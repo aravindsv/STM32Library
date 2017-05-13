@@ -195,7 +195,7 @@ const u32 PLL_N = HSI_VALUE * PLL_P;
   * @{
   */
 
-  uint32_t SystemCoreClock = 168000000;;
+  uint32_t SystemCoreClock = 180000000;// forF446 //168000000;// for F405;
 
   __I uint8_t AHBPrescTable[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
 

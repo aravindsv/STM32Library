@@ -104,7 +104,61 @@ public:
 		}
 	}
 
-	
+	static void initEncoder(unsigned int channel1, unsigned int channel2)
+	{
+		TIM_TypeDef* timer = reinterpret_cast<TIM_TypeDef*>(T);
+		timer->CR1 &= ~0x1;
+		setPeriod(4294967295);
+		switch(channel1) { //
+			case 1:	     //       0b0000000100000000
+				timer->CCMR1 |= 0x0071; 
+				break;
+			case 2:
+				timer->CCMR1 |= 0x7100;
+				break;
+			case 3:
+				timer->CCMR2 |= 0x0071;
+				break;
+			case 4:
+				timer->CCMR2 |= 0x7100;
+				break;
+		}
+		switch(channel2) { //
+			case 1:	     //       0b0000000100000000
+				timer->CCMR1 |= 0x0071; 
+				break;
+			case 2:
+				timer->CCMR1 |= 0x7100;
+				break;
+			case 3:
+				timer->CCMR2 |= 0x0071;
+				break;
+			case 4:
+				timer->CCMR2 |= 0x7100;
+				break;
+		}
+		//Set CCER Register
+		unsigned char ccerVal = 1;
+		timer->CCER |= (ccerVal << (4*(channel1-1)));
+		timer->CCER |= (ccerVal << (4*(channel2-1)));
+
+		timer->SMCR |= 3; //Encoder mode where both edges on both inputs are counted
+		timer->CR1 |= 0x1;
+	}
+
+	static void reverseEncoderPolarity(unsigned int channel1, unsigned int channel2)
+	{
+		//Set CCER Register
+		unsigned char ccerVal = 3;
+		// this->m_timer->CCER |= (ccerVal << (4*(channel1-1)));
+		reinterpret_cast<TIM_TypeDef*>(T)->CCER |= (ccerVal << (4*(channel2-1)));
+	}
+
+	static volatile int readEncoder()
+	{
+		return reinterpret_cast<TIM_TypeDef*>(T)->CNT;
+	}
+
 
 };
 
